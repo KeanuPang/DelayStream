@@ -1,10 +1,10 @@
 import ArgumentParser
 
 struct Commander: ParsableCommand {
-    @Argument(help: "The file path to read.")
+    @Argument(help: "File path to read.")
     var filePath: [String] = []
 
-    @Option(name: .shortAndLong, help: "delay milliseconds, default is 500ms.")
+    @Option(name: .shortAndLong, help: "Milli seconds to delay, default is 500ms.")
     var delay: Double?
 
     mutating func run() throws {
@@ -13,7 +13,9 @@ struct Commander: ParsableCommand {
         }
 
         for f in filePath {
-            guard let source = DelayStream.generateFileHandle(filePath: f) else { return }
+            guard let source = DelayStream.generateFileHandle(filePath: f) else {
+                throw CleanExit.message("Invalid file path: \(f)")
+            }
 
             let stream = DelayStream(source: source)
 
